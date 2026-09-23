@@ -94,12 +94,9 @@
             <div class="classical-card p-5 sm:p-8 rounded-2xl ink-shadow">
                 
                 <!-- Progress Header -->
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 pb-3 border-b border-amber-900/15">
-                    <div>
-                        <h2 class="text-lg font-bold text-amber-950">逐句默寫練習</h2>
-                        <p class="text-xs text-amber-800/70 mt-0.5">支持輸入繁體、簡體字或拼音。按 <kbd class="px-1 py-0.5 bg-amber-900/10 rounded font-sans text-xs">Enter</kbd> 直接下一句。</p>
-                    </div>
-                    <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+                <div class="flex justify-between items-center mb-4 pb-3 border-b border-amber-900/15">
+                    <h2 class="text-lg font-bold text-amber-950">逐句默寫練習</h2>
+                    <div class="flex items-center gap-2">
                         <span class="text-xs bg-amber-900/10 px-3 py-1 rounded-full font-semibold text-amber-900">
                             進度: <span id="blank-progress" class="font-bold">1</span> / 36
                         </span>
@@ -118,15 +115,15 @@
                     <div class="p-4 bg-amber-900/5 rounded-xl border border-amber-900/10 text-center transition-all-300">
                         <div class="flex justify-between items-center mb-1">
                             <span class="text-xs text-amber-800/60 font-medium" id="blank-context-label">上一句：</span>
-                            <button id="toggle-prev-btn" onclick="togglePrevLineVisibility()" class="text-xs text-amber-800 hover:text-amber-950 underline font-medium cursor-pointer">隱藏上一句</button>
+                            <button id="toggle-prev-btn" onclick="togglePrevLineVisibility()" class="text-xs text-amber-800 hover:text-amber-950 underline font-medium cursor-pointer">顯示上一句</button>
                         </div>
-                        <p class="text-lg font-bold text-amber-950 tracking-wider transition-all" id="blank-hint-text">春江潮水連海平，海上明月共潮生。</p>
+                        <p class="text-lg font-bold text-amber-950 tracking-wider transition-all blur-sm select-none" id="blank-hint-text">春江潮水連海平，海上明月共潮生。</p>
                     </div>
 
                     <!-- Input Area -->
                     <div>
                         <label class="block text-xs font-semibold text-amber-900 mb-1.5">請默寫當前句：</label>
-                        <textarea id="user-input-blank" rows="2" class="w-full p-3.5 rounded-xl border border-amber-900/30 bg-white/90 focus:ring-2 focus:ring-amber-800 focus:outline-none font-serif text-lg tracking-wider transition shadow-inner placeholder:text-stone-400 placeholder:text-sm" placeholder="在此輸入答案（繁體/簡體/拼音均可），按 Enter 下一句..."></textarea>
+                        <textarea id="user-input-blank" rows="2" class="w-full p-3.5 rounded-xl border border-amber-900/30 bg-white/90 focus:ring-2 focus:ring-amber-800 focus:outline-none font-serif text-lg tracking-wider transition shadow-inner placeholder:text-stone-400 placeholder:text-sm" placeholder="在此輸入答案，按 Enter 下一句..."></textarea>
                     </div>
 
                     <!-- Action Controls -->
@@ -141,7 +138,7 @@
     </main>
 
     <footer class="mt-auto py-4 text-center text-xs text-amber-900/50">
-        <p>Chon 2026.9.23 · 古典詩詞檢測系統</p>
+        <p>Chon 2026.9.23</p>
     </footer>
 
     <script>
@@ -185,10 +182,9 @@
         ];
 
         let userAnswers = new Array(poemData.length).fill("");
-        let showPrevLine = true;
+        let showPrevLine = false; // Default set to hidden
         let converter = null;
 
-        // Initialize OpenCC for Simplified to Traditional conversion
         if (window.OpenCC) {
             converter = OpenCC.Converter({ from: 'cn', to: 'hk' });
         }
@@ -249,6 +245,10 @@
 
         function togglePrevLineVisibility() {
             showPrevLine = !showPrevLine;
+            applyPrevLineState();
+        }
+
+        function applyPrevLineState() {
             const btn = document.getElementById('toggle-prev-btn');
             const hintText = document.getElementById('blank-hint-text');
 
@@ -280,6 +280,8 @@
                 document.getElementById('blank-context-label').innerText = "上一句：";
                 document.getElementById('blank-hint-text').innerText = poemData[currentBlankIndex - 1].line;
             }
+
+            applyPrevLineState();
 
             const inputField = document.getElementById('user-input-blank');
             inputField.value = userAnswers[currentBlankIndex] || '';
@@ -336,16 +338,16 @@
 
                 if (!userClean) return;
 
-                // 1. Direct match (Traditional)
+                // Direct match (Traditional)
                 if (userClean === correctClean) {
                     correctCount++;
                 } 
-                // 2. Simplified Chinese check
+                // Simplified Chinese check
                 else if (converter && cleanText(converter(userRaw)) === correctClean) {
                     correctCount++;
                     simplifiedCount++;
                 } 
-                // 3. Pinyin match check
+                // Pinyin match check
                 else if (userClean === pinyinClean) {
                     correctCount++;
                     pinyinCount++;
@@ -366,10 +368,10 @@
             if (simplifiedCount > 0 || pinyinCount > 0) {
                 msg += `\n\n⚠️ 答題細節提示：`;
                 if (simplifiedCount > 0) {
-                    msg += `\n• 共有 ${simplifiedCount} 句使用了簡體字，建議平時多練習繁體標準字形喔！`;
+                    msg += `\n• 共有 ${simplifiedCount} 句使用了簡體字，建議使用繁體字！`;
                 }
                 if (pinyinCount > 0) {
-                    msg += `\n• 共有 ${pinyinCount} 句使用了拼音替代，建議多嘗試寫出漢字。`;
+                    msg += `\n• 共有 ${pinyinCount} 句使用了拼音替代，建議使用繁體字！`;
                 }
             }
 
