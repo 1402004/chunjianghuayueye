@@ -72,7 +72,7 @@
 
     <main class="flex-grow max-w-4xl w-full mx-auto p-4 sm:p-6 my-4">
 
-        <!-- TAB 1: FULL POEM & READING / COMPARISON -->
+        <!-- TAB 1: FULL POEM -->
         <section id="tab-read" class="space-y-6">
             <div class="classical-card p-6 sm:p-10 rounded-xl ink-border relative overflow-hidden">
                 <div class="text-center mb-8">
@@ -93,13 +93,13 @@
             </div>
         </section>
 
-        <!-- TAB 2: BLANK FILLING / SENTENCE RECITATION -->
+        <!-- TAB 2: BLANK FILLING -->
         <section id="tab-blank" class="hidden space-y-6">
             <div class="classical-card p-6 sm:p-8 rounded-xl ink-border">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-4 border-b border-amber-900/20">
                     <div>
                         <h2 class="text-xl font-bold text-amber-900">逐句默寫</h2>
-                        <p class="text-xs text-amber-800/70 mt-1">按順序默寫全詩。在輸入框按 <kbd class="px-1.5 py-0.5 bg-amber-900/10 rounded font-sans text-xs border border-amber-900/20">Enter</kbd> 鍵提交，再次按 <kbd class="px-1.5 py-0.5 bg-amber-900/10 rounded font-sans text-xs border border-amber-900/20">Enter</kbd> 進入下一句。</p>
+                        <p class="text-xs text-amber-800/70 mt-1">輸入後按 <kbd class="px-1.5 py-0.5 bg-amber-900/10 rounded font-sans text-xs border border-amber-900/20">Enter</kbd> 或點擊按鈕直接進入下一句，最後統一結算成績。</p>
                     </div>
                     <div class="flex items-center gap-2">
                         <span class="text-xs bg-amber-900/10 px-3 py-1.5 rounded font-medium">當前進度: <span id="blank-progress" class="font-bold text-amber-900">1</span> / <span id="blank-total">36</span></span>
@@ -115,19 +115,13 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-amber-900 mb-1" id="current-line-label">請默寫下一句：</label>
-                        <textarea id="user-input-blank" rows="2" class="w-full p-4 rounded-lg border border-amber-900/30 bg-white/80 focus:ring-2 focus:ring-amber-900 focus:outline-none font-serif text-lg tracking-wider transition" placeholder="在此輸入繁體詩句，按 Enter 提交..."></textarea>
+                        <label class="block text-sm font-medium text-amber-900 mb-1">請默寫當前句：</label>
+                        <textarea id="user-input-blank" rows="2" class="w-full p-4 rounded-lg border border-amber-900/30 bg-white/80 focus:ring-2 focus:ring-amber-900 focus:outline-none font-serif text-lg tracking-wider transition" placeholder="在此輸入繁體詩句，按 Enter 直接下一句..."></textarea>
                     </div>
-
-                    <!-- Feedback Area -->
-                    <div id="feedback-area" class="hidden p-4 rounded-lg text-sm transition-all duration-300"></div>
 
                     <div class="flex justify-between items-center pt-2">
                         <button onclick="prevBlankLine()" class="px-4 py-2 bg-stone-200 hover:bg-stone-300 rounded text-stone-700 text-sm font-medium transition active:scale-95">上一句</button>
-                        <div class="space-x-2">
-                            <button id="submit-btn" onclick="handleBlankAction()" class="px-6 py-2 bg-amber-900 text-paper rounded hover:bg-amber-800 font-medium transition shadow active:scale-95">提交核對</button>
-                            <button onclick="nextBlankLine()" class="px-4 py-2 bg-amber-700 text-paper rounded hover:bg-amber-800 text-sm font-medium transition active:scale-95">下一句 ➔</button>
-                        </div>
+                        <button id="next-btn" onclick="nextBlankLine()" class="px-6 py-2 bg-amber-900 text-paper rounded hover:bg-amber-800 font-medium transition shadow active:scale-95">下一句 ➔</button>
                     </div>
                 </div>
             </div>
@@ -179,8 +173,8 @@
             { line: "落月搖情滿江樹", pinyin: "luò yuè yáo qíng mǎn jiāng shù", section: "第五段：遊子思歸" }
         ];
 
-        // Track user results for all lines (null: unattempted, true: correct, false: wrong)
-        let lineResults = new Array(poemData.length).fill(null);
+        // Store user inputs for all 36 lines
+        let userAnswers = new Array(poemData.length).fill("");
 
         function switchTab(tabId) {
             ['read', 'blank'].forEach(id => {
@@ -224,7 +218,6 @@
         }
 
         let currentBlankIndex = 0;
-        let isCheckedState = false;
 
         function initBlankMode() {
             document.getElementById('blank-total').innerText = poemData.length;
@@ -234,9 +227,14 @@
             inputField.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
-                    handleBlankAction();
+                    nextBlankLine();
                 }
             });
+        }
+
+        function saveCurrentAnswer() {
+            const inputField = document.getElementById('user-input-blank');
+            userAnswers[currentBlankIndex] = inputField.value.trim();
         }
 
         function updateBlankView() {
@@ -251,12 +249,17 @@
             }
 
             const inputField = document.getElementById('user-input-blank');
-            inputField.value = '';
+            inputField.value = userAnswers[currentBlankIndex] || '';
             inputField.focus();
-            
-            document.getElementById('feedback-area').classList.add('hidden');
-            isCheckedState = false;
-            document.getElementById('submit-btn').innerText = "提交核對";
+
+            const nextBtn = document.getElementById('next-btn');
+            if (currentBlankIndex === poemData.length - 1) {
+                nextBtn.innerText = "完成並提交核對 ✨";
+                nextBtn.className = "px-6 py-2 bg-emerald-800 text-paper rounded hover:bg-emerald-700 font-medium transition shadow active:scale-95";
+            } else {
+                nextBtn.innerText = "下一句 ➔";
+                nextBtn.className = "px-6 py-2 bg-amber-900 text-paper rounded hover:bg-amber-800 font-medium transition shadow active:scale-95";
+            }
         }
 
         function toggleHint() {
@@ -265,71 +268,9 @@
             alertBox(`本句首字提示為：【 ${firstChar} 】\n全句共有 ${currentItem.line.length} 個字。`);
         }
 
-        function handleBlankAction() {
-            const submitBtn = document.getElementById('submit-btn');
-            
-            if (isCheckedState) {
-                nextBlankLine();
-                return;
-            }
-
-            const userText = document.getElementById('user-input-blank').value.trim();
-            const correctText = poemData[currentBlankIndex].line;
-            const feedbackArea = document.getElementById('feedback-area');
-            feedbackArea.classList.remove('hidden');
-
-            const cleanUser = userText.replace(/[，。？！、\s]/g, '');
-            const cleanCorrect = correctText.replace(/[，。？！、\s]/g, '');
-
-            if (cleanUser === cleanCorrect) {
-                lineResults[currentBlankIndex] = true;
-                feedbackArea.className = "p-4 rounded-lg text-sm bg-emerald-950/10 border border-emerald-900/30 text-emerald-900 font-medium flex flex-col gap-1";
-                feedbackArea.innerHTML = `
-                    <div class="flex items-center gap-2">
-                        <span class="text-lg">✨</span>
-                        <span class="font-bold">完全正確！</span>
-                    </div>
-                    <div class="text-xs text-emerald-800/80 mt-1">答案：<span class="font-bold tracking-wider">${correctText}</span></div>
-                `;
-                isCheckedState = true;
-                submitBtn.innerText = "下一句 ➔";
-            } else {
-                lineResults[currentBlankIndex] = false;
-                feedbackArea.className = "p-4 rounded-lg text-sm bg-rose-950/10 border border-rose-900/30 text-rose-900 flex flex-col gap-3";
-                feedbackArea.innerHTML = `
-                    <div class="flex items-center gap-2 font-bold">
-                        <span class="text-lg">❌</span>
-                        <span>回答有誤或包含錯別字</span>
-                    </div>
-                    <div class="flex gap-2 pt-1">
-                        <button onclick="revealAnswer()" class="px-3 py-1 bg-rose-900 text-paper rounded text-xs hover:bg-rose-800 transition active:scale-95 shadow">💡 顯示標準答案</button>
-                        <button onclick="retryLine()" class="px-3 py-1 bg-stone-300 text-stone-800 rounded text-xs hover:bg-stone-400 transition active:scale-95">🔄 重新試一次</button>
-                    </div>
-                `;
-            }
-        }
-
-        function revealAnswer() {
-            const correctText = poemData[currentBlankIndex].line;
-            const feedbackArea = document.getElementById('feedback-area');
-            feedbackArea.className = "p-4 rounded-lg text-sm bg-amber-950/10 border border-amber-900/30 text-amber-900 font-medium";
-            feedbackArea.innerHTML = `
-                <div class="text-xs text-amber-800/70 mb-1">標準答案：</div>
-                <div class="font-bold tracking-widest text-lg text-amber-950 mb-2">${correctText}</div>
-                <div class="text-xs text-amber-800/70">請核對並加深印象，按 Enter 或點擊「下一句」繼續。</div>
-            `;
-            isCheckedState = true;
-            document.getElementById('submit-btn').innerText = "下一句 ➔";
-        }
-
-        function retryLine() {
-            const inputField = document.getElementById('user-input-blank');
-            inputField.value = '';
-            document.getElementById('feedback-area').classList.add('hidden');
-            inputField.focus();
-        }
-
         function nextBlankLine() {
+            saveCurrentAnswer();
+
             if (currentBlankIndex < poemData.length - 1) {
                 currentBlankIndex++;
                 updateBlankView();
@@ -339,6 +280,8 @@
         }
 
         function prevBlankLine() {
+            saveCurrentAnswer();
+
             if (currentBlankIndex > 0) {
                 currentBlankIndex--;
                 updateBlankView();
@@ -346,7 +289,18 @@
         }
 
         function showCompletionSummary() {
-            const correctCount = lineResults.filter(r => r === true).length;
+            let correctCount = 0;
+
+            poemData.forEach((item, i) => {
+                const userText = userAnswers[i] || "";
+                const cleanUser = userText.replace(/[，。？！、\s]/g, '');
+                const cleanCorrect = item.line.replace(/[，。？！、\s]/g, '');
+
+                if (cleanUser === cleanCorrect) {
+                    correctCount++;
+                }
+            });
+
             const total = poemData.length;
             const accuracy = Math.round((correctCount / total) * 100);
 
@@ -356,7 +310,7 @@
             else if (accuracy >= 50) title = "📖 熟練度尚可，再接再厲！";
             else title = "✍️ 建議多對照原文複習喔！";
 
-            const msg = `${title}\n\n📊 默寫成績單：\n• 正確率：${accuracy}%\n• 正確句數：${correctCount} / ${total}\n• 錯漏句數：${total - correctCount} 句`;
+            const msg = `${title}\n\n📊 全詩默寫成績單：\n• 正確率：${accuracy}%\n• 正確句數：${correctCount} / ${total}\n• 錯漏句數：${total - correctCount} 句`;
             
             alertBox(msg);
         }
