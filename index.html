@@ -328,31 +328,42 @@
             let correctCount = 0;
             let simplifiedCount = 0;
             let pinyinCount = 0;
-            let errors = [];
+            let details = [];
 
             poemData.forEach((item, i) => {
                 let userRaw = userAnswers[i] || "";
                 let userClean = cleanText(userRaw);
                 let correctClean = cleanText(item.line);
+                let pinyinClean = cleanText(item.pinyin);
 
                 let isCorrect = false;
+                let isSimplified = false;
+                let isPinyin = false;
 
-                if (userClean === correctClean) {
-                    correctCount++;
+                if (userClean && userClean === correctClean) {
                     isCorrect = true;
-                } else if (converter && cleanText(converter(userRaw)) === correctClean) {
-                    correctCount++;
+                } else if (userClean && converter && cleanText(converter(userRaw)) === correctClean) {
+                    isCorrect = true;
+                    isSimplified = true;
                     simplifiedCount++;
+                } else if (userClean && userClean === pinyinClean) {
                     isCorrect = true;
+                    isPinyin = true;
+                    pinyinCount++;
                 }
 
-                if (!isCorrect) {
-                    errors.push({
-                        index: i + 1,
-                        correct: item.line,
-                        user: userRaw || "（未填寫）"
-                    });
+                if (isCorrect) {
+                    correctCount++;
                 }
+
+                details.push({
+                    index: i + 1,
+                    correct: item.line,
+                    user: userRaw || "（未填寫）",
+                    isCorrect: isCorrect,
+                    isSimplified: isSimplified,
+                    isPinyin: isPinyin
+                });
             });
 
             const total = poemData.length;
@@ -370,30 +381,46 @@
                     <p>📊 <strong>正確率：</strong> ${accuracy}%</p>
                     <p>✅ <strong>答對句數：</strong> ${correctCount} / ${total}</p>
                     <p>❌ <strong>錯漏句數：</strong> ${total - correctCount} 句</p>
-                    ${simplifiedCount > 0 ? `<p class="text-xs text-amber-800 mt-2">⚠️ 共有 ${simplifiedCount} 句使用了簡體字，建議使用繁體字！</p>` : ''}
+                    ${simplifiedCount > 0 ? `<p class="text-xs text-amber-800 mt-2">⚠️ 共有 ${simplifiedCount} 句使用簡體字（已算答對，建議改用繁體字）</p>` : ''}
+                    ${pinyinCount > 0 ? `<p class="text-xs text-amber-800 mt-1">⚠️ 共有 ${pinyinCount} 句使用拼音（已算答對，建議改用繁體字）</p>` : ''}
                 </div>
             `;
 
-            if (errors.length > 0) {
+            let incorrectOrWarns = details.filter(d => !d.isCorrect || d.isSimplified || d.isPinyin);
+
+            if (incorrectOrWarns.length > 0) {
                 summaryHtml += `
                     <div class="flex justify-between items-center mb-2">
-                        <span class="text-sm font-bold text-amber-950">錯漏明細對照：</span>
+                        <span class="text-sm font-bold text-amber-950">答題細節與記錄：</span>
                     </div>
                     <div class="max-h-48 overflow-y-auto space-y-2 text-xs pr-1 border-t border-b border-amber-900/10 py-2 mb-4">
-                        ${errors.map(e => `
-                            <div class="bg-red-50/60 p-2.5 rounded-lg border border-red-200/50">
-                                <div class="font-bold text-amber-900">第 ${e.index} 句</div>
-                                <div class="text-emerald-800 font-semibold">原句：${e.correct}</div>
-                                <div class="text-red-700">您的答案：${e.user}</div>
-                            </div>
-                        `).join('')}
+                        ${incorrectOrWarns.map(d => {
+                            if (!d.isCorrect) {
+                                return `
+                                    <div class="bg-red-50/70 p-2.5 rounded-lg border border-red-200/60">
+                                        <div class="font-bold text-red-900">第 ${d.index} 句（錯誤）</div>
+                                        <div class="text-emerald-800 font-semibold">原句：${d.correct}</div>
+                                        <div class="text-red-700">您的答案：${d.user}</div>
+                                    </div>
+                                `;
+                            } else {
+                                let label = d.isSimplified ? "簡體字提醒" : "拼音提醒";
+                                return `
+                                    <div class="bg-amber-50/70 p-2.5 rounded-lg border border-amber-200/60">
+                                        <div class="font-bold text-amber-900">第 ${d.index} 句（${label} - 已算答對）</div>
+                                        <div class="text-emerald-800 font-semibold">原句：${d.correct}</div>
+                                        <div class="text-amber-800">您的答案：${d.user}</div>
+                                    </div>
+                                `;
+                            }
+                        }).join('')}
                     </div>
                 `;
             } else {
-                summaryHtml += `<p class="text-center text-sm text-emerald-800 font-bold my-4">🎉 太棒了，完全沒有錯字！</p>`;
+                summaryHtml += `<p class="text-center text-sm text-emerald-800 font-bold my-4">🎉 太棒了，全部使用繁體字正確默寫！</p>`;
             }
 
-            alertCustomModal(summaryHtml, errors.length > 0);
+            alertCustomModal(summaryHtml, details.some(d => !d.isCorrect));
         }
 
         function alertCustomModal(contentHtml, hasErrors) {
@@ -424,7 +451,9 @@
             for (let i = 0; i < poemData.length; i++) {
                 let userClean = cleanText(userAnswers[i] || "");
                 let correctClean = cleanText(poemData[i].line);
-                let isCorrect = userClean === correctClean || (converter && cleanText(converter(userAnswers[i] || "")) === correctClean);
+                let pinyinClean = cleanText(poemData[i].pinyin);
+                
+                let isCorrect = userClean && (userClean === correctClean || (converter && cleanText(converter(userAnswers[i] || "")) === correctClean) || userClean === pinyinClean);
                 
                 if (!isCorrect) {
                     currentBlankIndex = i;
