@@ -79,7 +79,7 @@
                     <h2 class="text-3xl font-bold mb-2 text-amber-900">春江花月夜</h2>
                     <p class="text-sm text-amber-800/80 tracking-widest">唐 · 張若虛</p>
                     <div class="mt-4 flex justify-center gap-4 text-xs">
-                        <label class="flex items-center gap-1.5 cursor-pointer bg-amber-900/10 px-3 py-1 rounded-full">
+                        <label class="flex items-center gap-1.5 cursor-pointer bg-amber-900/10 px-3 py-1 rounded-full hover:bg-amber-900/20 transition">
                             <input type="checkbox" id="toggle-pinyin" onchange="togglePinyinDisplay()" class="rounded text-amber-800 focus:ring-amber-900">
                             <span>顯示拼音注音</span>
                         </label>
@@ -99,33 +99,34 @@
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-4 border-b border-amber-900/20">
                     <div>
                         <h2 class="text-xl font-bold text-amber-900">逐句默寫</h2>
-                        <p class="text-xs text-amber-800/70 mt-1">按順序默寫全詩。在輸入框按 <kbd class="px-1.5 py-0.5 bg-amber-900/10 rounded font-sans text-xs">Enter</kbd> 鍵可提交，再次按 <kbd class="px-1.5 py-0.5 bg-amber-900/10 rounded font-sans text-xs">Enter</kbd> 可進入下一句。</p>
+                        <p class="text-xs text-amber-800/70 mt-1">按順序默寫全詩。在輸入框按 <kbd class="px-1.5 py-0.5 bg-amber-900/10 rounded font-sans text-xs border border-amber-900/20">Enter</kbd> 鍵提交，再次按 <kbd class="px-1.5 py-0.5 bg-amber-900/10 rounded font-sans text-xs border border-amber-900/20">Enter</kbd> 進入下一句。</p>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span class="text-xs bg-amber-900/10 px-3 py-1.5 rounded font-medium">當前進度: <span id="blank-progress">1</span> / <span id="blank-total">36</span></span>
-                        <button onclick="toggleHint()" class="px-3 py-1.5 text-xs bg-amber-700 text-paper rounded hover:bg-amber-800 transition shadow">💡 提示首字</button>
+                        <span class="text-xs bg-amber-900/10 px-3 py-1.5 rounded font-medium">當前進度: <span id="blank-progress" class="font-bold text-amber-900">1</span> / <span id="blank-total">36</span></span>
+                        <button onclick="toggleHint()" class="px-3 py-1.5 text-xs bg-amber-700 text-paper rounded hover:bg-amber-800 transition shadow active:scale-95">💡 提示首字</button>
                     </div>
                 </div>
 
                 <!-- Active Verse Prompt Area -->
                 <div class="space-y-4">
                     <div class="p-4 bg-amber-900/5 rounded-lg border border-amber-900/10 text-center">
-                        <p class="text-xs text-amber-800/70 mb-1" id="blank-context-label">上一句 / 提示：</p>
+                        <p class="text-xs text-amber-800/70 mb-1" id="blank-context-label">上一句：</p>
                         <p class="text-lg font-semibold text-amber-950" id="blank-hint-text">春江潮水連海平，海上明月共潮生。</p>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-amber-900 mb-1" id="current-line-label">請默寫下一句：</label>
-                        <textarea id="user-input-blank" rows="2" class="w-full p-4 rounded-lg border border-amber-900/30 bg-white/80 focus:ring-2 focus:ring-amber-900 focus:outline-none font-serif text-lg tracking-wider" placeholder="在此輸入繁體詩句，按 Enter 提交..."></textarea>
+                        <textarea id="user-input-blank" rows="2" class="w-full p-4 rounded-lg border border-amber-900/30 bg-white/80 focus:ring-2 focus:ring-amber-900 focus:outline-none font-serif text-lg tracking-wider transition" placeholder="在此輸入繁體詩句，按 Enter 提交..."></textarea>
                     </div>
 
-                    <div id="feedback-area" class="hidden p-4 rounded-lg text-sm"></div>
+                    <!-- Feedback Area -->
+                    <div id="feedback-area" class="hidden p-4 rounded-lg text-sm transition-all duration-300"></div>
 
                     <div class="flex justify-between items-center pt-2">
-                        <button onclick="prevBlankLine()" class="px-4 py-2 bg-stone-200 hover:bg-stone-300 rounded text-stone-700 text-sm font-medium transition">上一句</button>
+                        <button onclick="prevBlankLine()" class="px-4 py-2 bg-stone-200 hover:bg-stone-300 rounded text-stone-700 text-sm font-medium transition active:scale-95">上一句</button>
                         <div class="space-x-2">
-                            <button id="submit-btn" onclick="handleBlankAction()" class="px-6 py-2 bg-amber-900 text-paper rounded hover:bg-amber-800 font-medium transition shadow">提交核對</button>
-                            <button onclick="nextBlankLine()" class="px-4 py-2 bg-amber-700 text-paper rounded hover:bg-amber-800 text-sm font-medium transition">下一句 ➔</button>
+                            <button id="submit-btn" onclick="handleBlankAction()" class="px-6 py-2 bg-amber-900 text-paper rounded hover:bg-amber-800 font-medium transition shadow active:scale-95">提交核對</button>
+                            <button onclick="nextBlankLine()" class="px-4 py-2 bg-amber-700 text-paper rounded hover:bg-amber-800 text-sm font-medium transition active:scale-95">下一句 ➔</button>
                         </div>
                     </div>
                 </div>
@@ -139,7 +140,6 @@
     </footer>
 
     <script>
-        // Full poem database broken into lines with Traditional Chinese characters and pinyin
         const poemData = [
             { line: "春江潮水連海平", pinyin: "chūn jiāng cháo shuǐ lián hǎi píng", section: "第一段：月出驚波" },
             { line: "海上明月共潮生", pinyin: "hǎi shàng míng yuè gòng cháo shēng", section: "第一段：月出驚波" },
@@ -172,14 +172,16 @@
             { line: "昨夜閒潭夢落花", pinyin: "zuó yè xián tán mèng luò huā", section: "第五段：遊子思歸" },
             { line: "可憐春半不還家", pinyin: "kě lián chūn bàn bù huán jiā", section: "第五段：遊子思歸" },
             { line: "江水流春去欲盡", pinyin: "jiāng shuǐ liú chūn qù yù jìn", section: "第五段：遊子思歸" },
-            { line: "江潭落月複西斜", pinyin: "jiāng tán luò yuè fù xī斜", section: "第五段：遊子思歸" },
+            { line: "江潭落月複西斜", pinyin: "jiāng tán luò yuè fù xī xié", section: "第五段：遊子思歸" },
             { line: "斜月沉沉藏海霧", pinyin: "xié yuè chén chén cáng hǎi wù", section: "第五段：遊子思歸" },
             { line: "碣石瀟湘無限路", pinyin: "jié shí xiāo xiāng wú xiàn lù", section: "第五段：遊子思歸" },
             { line: "不知乘月幾人歸", pinyin: "bù zhī chéng yuè jǐ rén guī", section: "第五段：遊子思歸" },
             { line: "落月搖情滿江樹", pinyin: "luò yuè yáo qíng mǎn jiāng shù", section: "第五段：遊子思歸" }
         ];
 
-        // Tab Switching Logic
+        // Track user results for all lines (null: unattempted, true: correct, false: wrong)
+        let lineResults = new Array(poemData.length).fill(null);
+
         function switchTab(tabId) {
             ['read', 'blank'].forEach(id => {
                 document.getElementById(`tab-${id}`).classList.add('hidden');
@@ -187,9 +189,12 @@
             });
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             document.getElementById(`btn-${tabId}`).className = "px-4 py-1.5 rounded text-sm font-medium transition-all bg-amber-900 text-paper shadow";
+            
+            if (tabId === 'blank') {
+                setTimeout(() => document.getElementById('user-input-blank').focus(), 100);
+            }
         }
 
-        // Render Full Poem View
         function renderPoemView() {
             const container = document.getElementById('poem-container');
             let html = '';
@@ -218,7 +223,6 @@
             });
         }
 
-        // Blank Filling State
         let currentBlankIndex = 0;
         let isCheckedState = false;
 
@@ -226,10 +230,9 @@
             document.getElementById('blank-total').innerText = poemData.length;
             updateBlankView();
 
-            // Bind Enter key behavior
             const inputField = document.getElementById('user-input-blank');
             inputField.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
+                if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
                     handleBlankAction();
                 }
@@ -241,13 +244,16 @@
             
             if (currentBlankIndex === 0) {
                 document.getElementById('blank-context-label').innerText = "詩首提示：";
-                document.getElementById('blank-hint-text').innerText = "全詩開頭（點擊上方按鈕可查看提示首字）";
+                document.getElementById('blank-hint-text').innerText = "全詩開頭（可點擊右上角按鈕獲取首字提示）";
             } else {
                 document.getElementById('blank-context-label').innerText = "上一句：";
                 document.getElementById('blank-hint-text').innerText = poemData[currentBlankIndex - 1].line;
             }
 
-            document.getElementById('user-input-blank').value = '';
+            const inputField = document.getElementById('user-input-blank');
+            inputField.value = '';
+            inputField.focus();
+            
             document.getElementById('feedback-area').classList.add('hidden');
             isCheckedState = false;
             document.getElementById('submit-btn').innerText = "提交核對";
@@ -256,7 +262,7 @@
         function toggleHint() {
             const currentItem = poemData[currentBlankIndex];
             const firstChar = currentItem.line.charAt(0);
-            alertBox(`本句首字提示為：【 ${firstChar} 】 共 ${currentItem.line.length} 個字。`);
+            alertBox(`本句首字提示為：【 ${firstChar} 】\n全句共有 ${currentItem.line.length} 個字。`);
         }
 
         function handleBlankAction() {
@@ -272,21 +278,32 @@
             const feedbackArea = document.getElementById('feedback-area');
             feedbackArea.classList.remove('hidden');
 
-            const cleanUser = userText.replace(/[，。？！、]/g, '');
-            const cleanCorrect = correctText.replace(/[，。？！、]/g, '');
+            const cleanUser = userText.replace(/[，。？！、\s]/g, '');
+            const cleanCorrect = correctText.replace(/[，。？！、\s]/g, '');
 
             if (cleanUser === cleanCorrect) {
-                feedbackArea.className = "p-4 rounded-lg text-sm bg-emerald-950/10 border border-emerald-900/30 text-emerald-900 font-medium flex flex-col gap-2";
-                feedbackArea.innerHTML = `<div>✨ 恭喜您，回答正確！<br><span class="text-xs opacity-85">標準答案：${correctText}</span></div>`;
+                lineResults[currentBlankIndex] = true;
+                feedbackArea.className = "p-4 rounded-lg text-sm bg-emerald-950/10 border border-emerald-900/30 text-emerald-900 font-medium flex flex-col gap-1";
+                feedbackArea.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="text-lg">✨</span>
+                        <span class="font-bold">完全正確！</span>
+                    </div>
+                    <div class="text-xs text-emerald-800/80 mt-1">答案：<span class="font-bold tracking-wider">${correctText}</span></div>
+                `;
                 isCheckedState = true;
                 submitBtn.innerText = "下一句 ➔";
             } else {
+                lineResults[currentBlankIndex] = false;
                 feedbackArea.className = "p-4 rounded-lg text-sm bg-rose-950/10 border border-rose-900/30 text-rose-900 flex flex-col gap-3";
                 feedbackArea.innerHTML = `
-                    <div>❌ 存在差異或錯別字。<br>您的輸入：${userText || '（空）'}</div>
+                    <div class="flex items-center gap-2 font-bold">
+                        <span class="text-lg">❌</span>
+                        <span>回答有誤或包含錯別字</span>
+                    </div>
                     <div class="flex gap-2 pt-1">
-                        <button onclick="revealAnswer()" class="px-3 py-1 bg-rose-900 text-paper rounded text-xs hover:bg-rose-800 transition">💡 顯示答案</button>
-                        <button onclick="retryLine()" class="px-3 py-1 bg-stone-300 text-stone-800 rounded text-xs hover:bg-stone-400 transition">🔄 重新默寫</button>
+                        <button onclick="revealAnswer()" class="px-3 py-1 bg-rose-900 text-paper rounded text-xs hover:bg-rose-800 transition active:scale-95 shadow">💡 顯示標準答案</button>
+                        <button onclick="retryLine()" class="px-3 py-1 bg-stone-300 text-stone-800 rounded text-xs hover:bg-stone-400 transition active:scale-95">🔄 重新試一次</button>
                     </div>
                 `;
             }
@@ -296,15 +313,20 @@
             const correctText = poemData[currentBlankIndex].line;
             const feedbackArea = document.getElementById('feedback-area');
             feedbackArea.className = "p-4 rounded-lg text-sm bg-amber-950/10 border border-amber-900/30 text-amber-900 font-medium";
-            feedbackArea.innerHTML = `📖 標準答案：<strong class="font-bold tracking-wider text-base">${correctText}</strong><br><span class="text-xs opacity-75 mt-1 block">按 Enter 鍵或點擊下一步繼續。</span>`;
+            feedbackArea.innerHTML = `
+                <div class="text-xs text-amber-800/70 mb-1">標準答案：</div>
+                <div class="font-bold tracking-widest text-lg text-amber-950 mb-2">${correctText}</div>
+                <div class="text-xs text-amber-800/70">請核對並加深印象，按 Enter 或點擊「下一句」繼續。</div>
+            `;
             isCheckedState = true;
             document.getElementById('submit-btn').innerText = "下一句 ➔";
         }
 
         function retryLine() {
-            document.getElementById('user-input-blank').value = '';
+            const inputField = document.getElementById('user-input-blank');
+            inputField.value = '';
             document.getElementById('feedback-area').classList.add('hidden');
-            document.getElementById('user-input-blank').focus();
+            inputField.focus();
         }
 
         function nextBlankLine() {
@@ -312,7 +334,7 @@
                 currentBlankIndex++;
                 updateBlankView();
             } else {
-                alertBox("太棒了！您已經完成了《春江花月夜》全詩的逐句默寫練習！");
+                showCompletionSummary();
             }
         }
 
@@ -323,7 +345,22 @@
             }
         }
 
-        // Custom Message Box
+        function showCompletionSummary() {
+            const correctCount = lineResults.filter(r => r === true).length;
+            const total = poemData.length;
+            const accuracy = Math.round((correctCount / total) * 100);
+
+            let title = "默寫完成！";
+            if (accuracy === 100) title = "🏆 完美全對！功力深厚！";
+            else if (accuracy >= 80) title = "👏 表現相當優異！";
+            else if (accuracy >= 50) title = "📖 熟練度尚可，再接再厲！";
+            else title = "✍️ 建議多對照原文複習喔！";
+
+            const msg = `${title}\n\n📊 默寫成績單：\n• 正確率：${accuracy}%\n• 正確句數：${correctCount} / ${total}\n• 錯漏句數：${total - correctCount} 句`;
+            
+            alertBox(msg);
+        }
+
         function alertBox(message) {
             let modal = document.getElementById('custom-alert');
             if (!modal) {
@@ -331,9 +368,9 @@
                 modal.id = 'custom-alert';
                 modal.className = 'fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center z-50 p-4';
                 modal.innerHTML = `
-                    <div class="bg-[#FAF6EF] border-2 border-amber-900 p-6 rounded-xl max-w-sm w-full text-center shadow-xl">
-                        <p id="custom-alert-msg" class="text-amber-950 mb-6 font-serif text-lg leading-relaxed"></p>
-                        <button onclick="document.getElementById('custom-alert').classList.add('hidden')" class="px-6 py-2 bg-amber-900 text-paper rounded font-medium shadow hover:bg-amber-800 transition">確定</button>
+                    <div class="bg-[#FAF6EF] border-2 border-amber-900 p-6 rounded-xl max-w-sm w-full text-center shadow-xl transform transition-all">
+                        <p id="custom-alert-msg" class="text-amber-950 mb-6 font-serif text-lg leading-relaxed whitespace-pre-line"></p>
+                        <button onclick="document.getElementById('custom-alert').classList.add('hidden')" class="px-6 py-2 bg-amber-900 text-paper rounded font-medium shadow hover:bg-amber-800 transition active:scale-95">確定</button>
                     </div>
                 `;
                 document.body.appendChild(modal);
@@ -344,10 +381,9 @@
 
         function openInspector(index) {
             const item = poemData[index];
-            alertBox(`【第 ${index + 1} 句】\n詩句：${item.line}\n拼音：${item.pinyin}\n所屬：${item.section}`);
+            alertBox(`【第 ${index + 1} 句】\n詩句：${item.line}\n拼音：${item.pinyin}\n歸屬：${item.section}`);
         }
 
-        // Initialize on load
         window.onload = function() {
             renderPoemView();
             initBlankMode();
