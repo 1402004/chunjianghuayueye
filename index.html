@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>春江花月夜 · 詩詞默寫與複習助手</title>
+    <title>春江花月夜 · 詩詞默寫</title>
     <!-- Tailwind CSS for modern responsive layout and styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts for classical feel -->
@@ -59,11 +59,8 @@
     <header class="border-b border-amber-900/20 bg-[#FAF6EF]/80 backdrop-blur sticky top-0 z-50">
         <div class="max-w-5xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-2">
             <div class="flex items-center gap-3">
-                <span class="text-3xl">🌙</span>
-                <div>
-                    <h1 class="text-2xl font-bold tracking-widest text-amber-900 font-calligraphy">春江花月夜</h1>
-                    <p class="text-xs text-amber-800/70 tracking-wider">[唐] 張若虛 · 默寫複習通關寶典</p>
-                </div>
+                <h1 class="text-2xl font-bold tracking-widest text-amber-900 font-calligraphy">春江花月夜</h1>
+                <p class="text-xs text-amber-800/70 tracking-wider">[唐] 張若虛</p>
             </div>
             <!-- Navigation Tabs -->
             <nav class="flex flex-wrap gap-1 bg-amber-900/10 p-1.5 rounded-lg">
@@ -78,10 +75,9 @@
         <!-- TAB 1: FULL POEM & READING / COMPARISON -->
         <section id="tab-read" class="space-y-6">
             <div class="classical-card p-6 sm:p-10 rounded-xl ink-border relative overflow-hidden">
-                <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none text-9xl">🌊</div>
                 <div class="text-center mb-8">
                     <h2 class="text-3xl font-bold mb-2 text-amber-900">春江花月夜</h2>
-                    <p class="text-sm text-amber-800/80 tracking-widest">唐代 · 張若虛</p>
+                    <p class="text-sm text-amber-800/80 tracking-widest">唐 · 張若虛</p>
                     <div class="mt-4 flex justify-center gap-4 text-xs">
                         <label class="flex items-center gap-1.5 cursor-pointer bg-amber-900/10 px-3 py-1 rounded-full">
                             <input type="checkbox" id="toggle-pinyin" onchange="togglePinyinDisplay()" class="rounded text-amber-800 focus:ring-amber-900">
@@ -102,7 +98,7 @@
             <div class="classical-card p-6 sm:p-8 rounded-xl ink-border">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-4 border-b border-amber-900/20">
                     <div>
-                        <h2 class="text-xl font-bold text-amber-900">逐句默寫闖關</h2>
+                        <h2 class="text-xl font-bold text-amber-900">逐句默寫</h2>
                         <p class="text-xs text-amber-800/70 mt-1">按順序默寫全詩。在輸入框按 <kbd class="px-1.5 py-0.5 bg-amber-900/10 rounded font-sans text-xs">Enter</kbd> 鍵可提交，再次按 <kbd class="px-1.5 py-0.5 bg-amber-900/10 rounded font-sans text-xs">Enter</kbd> 可進入下一句。</p>
                     </div>
                     <div class="flex items-center gap-2">
