@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>春江花月夜</title>
-    <!-- Tailwind CSS for modern responsive layout and styling -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts for classical feel -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
+    <!-- Simplified to Traditional Chinese Conversion Library -->
+    <script src="https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/cn2t.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -20,8 +22,8 @@
                         paper: '#F4ECE1',
                         ink: '#2A2827',
                         accent: '#8B4513',
-                        jade: '#3A5F43',
-                        gold: '#C5A059'
+                        jade: '#2D5A27',
+                        amberGold: '#B8860B'
                     }
                 }
             }
@@ -30,54 +32,49 @@
     <style>
         body {
             background-color: #F4ECE1;
-            background-image: radial-gradient(#E8DCC4 1px, transparent 1px);
+            background-image: radial-gradient(#E2D3B8 1.5px, transparent 1.5px);
             background-size: 24px 24px;
             color: #2A2827;
         }
-        .ink-border {
-            border: 2px solid #8B4513;
-            box-shadow: 4px 4px 0px rgba(139, 69, 19, 0.2);
+        .ink-shadow {
+            box-shadow: 0 10px 25px -5px rgba(139, 69, 19, 0.15), 0 8px 10px -6px rgba(139, 69, 19, 0.1);
         }
         .classical-card {
             background: #FAF6EF;
             border: 1px solid #D1C2A5;
         }
-        ::-webkit-scrollbar {
-            width: 6px;
+        .transition-all-300 {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        ::-webkit-scrollbar-track {
-            background: #F4ECE1;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #D1C2A5;
-            border-radius: 3px;
-        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #F4ECE1; }
+        ::-webkit-scrollbar-thumb { background: #C5A059; border-radius: 3px; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col font-serif selection:bg-amber-200">
 
-    <header class="border-b border-amber-900/20 bg-[#FAF6EF]/80 backdrop-blur sticky top-0 z-50">
-        <div class="max-w-5xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-2">
+    <!-- Header Navigation -->
+    <header class="border-b border-amber-900/20 bg-[#FAF6EF]/90 backdrop-blur sticky top-0 z-40 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <h1 class="text-2xl font-bold tracking-widest text-amber-900 font-calligraphy">春江花月夜</h1>
-                <p class="text-xs text-amber-800/70 tracking-wider">[唐] 張若虛</p>
+                <h1 class="text-2xl font-bold tracking-widest text-amber-950 font-calligraphy">春江花月夜</h1>
+                <span class="text-xs text-amber-800/60 font-medium tracking-wider hidden sm:inline">[唐] 張若虛</span>
             </div>
-            <!-- Navigation Tabs -->
-            <nav class="flex flex-wrap gap-1 bg-amber-900/10 p-1.5 rounded-lg">
-                <button onclick="switchTab('read')" id="btn-read" class="px-4 py-1.5 rounded text-sm font-medium transition-all bg-amber-900 text-paper shadow">全文朗讀</button>
-                <button onclick="switchTab('blank')" id="btn-blank" class="px-4 py-1.5 rounded text-sm font-medium transition-all text-amber-900 hover:bg-amber-900/20">逐句默寫</button>
+            <nav class="flex gap-1 bg-amber-900/10 p-1 rounded-lg">
+                <button onclick="switchTab('read')" id="btn-read" class="px-4 py-1.5 rounded-md text-sm font-semibold transition-all-300 bg-amber-900 text-paper shadow">全文背誦</button>
+                <button onclick="switchTab('blank')" id="btn-blank" class="px-4 py-1.5 rounded-md text-sm font-semibold transition-all-300 text-amber-900 hover:bg-amber-900/10">逐句默寫</button>
             </nav>
         </div>
     </header>
 
-    <main class="flex-grow max-w-4xl w-full mx-auto p-4 sm:p-6 my-4">
+    <main class="flex-grow max-w-3xl w-full mx-auto p-4 sm:p-6 my-2">
 
-        <!-- TAB 1: FULL POEM -->
+        <!-- TAB 1: READ POEM -->
         <section id="tab-read" class="space-y-6">
-            <div class="classical-card p-6 sm:p-10 rounded-xl ink-border relative overflow-hidden">
+            <div class="classical-card p-6 sm:p-10 rounded-2xl ink-shadow relative">
                 <div class="text-center mb-8">
-                    <h2 class="text-3xl font-bold mb-2 text-amber-900">春江花月夜</h2>
-                    <p class="text-sm text-amber-800/80 tracking-widest">唐 · 張若虛</p>
+                    <h2 class="text-3xl font-bold mb-1 text-amber-950 tracking-widest">春江花月夜</h2>
+                    <p class="text-xs text-amber-800/80 tracking-widest">唐 · 張若虛</p>
                     <div class="mt-4 flex justify-center gap-4 text-xs">
                         <label class="flex items-center gap-1.5 cursor-pointer bg-amber-900/10 px-3 py-1 rounded-full hover:bg-amber-900/20 transition">
                             <input type="checkbox" id="toggle-pinyin" onchange="togglePinyinDisplay()" class="rounded text-amber-800 focus:ring-amber-900">
@@ -86,42 +83,56 @@
                     </div>
                 </div>
 
-                <!-- Poem Content Container -->
-                <div id="poem-container" class="space-y-6 text-center text-lg sm:text-xl leading-relaxed font-serif text-stone-800">
-                    <!-- Populated dynamically via script -->
+                <div id="poem-container" class="space-y-4 text-center text-lg sm:text-xl leading-relaxed text-stone-800">
+                    <!-- Populated dynamically -->
                 </div>
             </div>
         </section>
 
-        <!-- TAB 2: BLANK FILLING -->
-        <section id="tab-blank" class="hidden space-y-6">
-            <div class="classical-card p-6 sm:p-8 rounded-xl ink-border">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 pb-4 border-b border-amber-900/20">
+        <!-- TAB 2: BLANK PRACTICE -->
+        <section id="tab-blank" class="hidden space-y-4">
+            <div class="classical-card p-5 sm:p-8 rounded-2xl ink-shadow">
+                
+                <!-- Progress Header -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 pb-3 border-b border-amber-900/15">
                     <div>
-                        <h2 class="text-xl font-bold text-amber-900">逐句默寫</h2>
-                        <p class="text-xs text-amber-800/70 mt-1">輸入後按 <kbd class="px-1.5 py-0.5 bg-amber-900/10 rounded font-sans text-xs border border-amber-900/20">Enter</kbd> 或點擊按鈕直接進入下一句，最後統一結算成績。</p>
+                        <h2 class="text-lg font-bold text-amber-950">逐句默寫練習</h2>
+                        <p class="text-xs text-amber-800/70 mt-0.5">支持輸入繁體、簡體字或拼音。按 <kbd class="px-1 py-0.5 bg-amber-900/10 rounded font-sans text-xs">Enter</kbd> 直接下一句。</p>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-xs bg-amber-900/10 px-3 py-1.5 rounded font-medium">當前進度: <span id="blank-progress" class="font-bold text-amber-900">1</span> / <span id="blank-total">36</span></span>
-                        <button onclick="toggleHint()" class="px-3 py-1.5 text-xs bg-amber-700 text-paper rounded hover:bg-amber-800 transition shadow active:scale-95">💡 提示首字</button>
+                    <div class="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+                        <span class="text-xs bg-amber-900/10 px-3 py-1 rounded-full font-semibold text-amber-900">
+                            進度: <span id="blank-progress" class="font-bold">1</span> / 36
+                        </span>
+                        <button onclick="toggleHint()" class="px-3 py-1 text-xs bg-amber-800 text-paper rounded-full hover:bg-amber-900 transition active:scale-95 shadow">💡 首字提示</button>
                     </div>
+                </div>
+
+                <!-- Dynamic Progress Bar -->
+                <div class="w-full bg-amber-900/10 h-1.5 rounded-full overflow-hidden mb-5">
+                    <div id="progress-bar" class="bg-amber-800 h-full transition-all duration-300" style="width: 2.78%;"></div>
                 </div>
 
                 <!-- Active Verse Prompt Area -->
                 <div class="space-y-4">
-                    <div class="p-4 bg-amber-900/5 rounded-lg border border-amber-900/10 text-center">
-                        <p class="text-xs text-amber-800/70 mb-1" id="blank-context-label">上一句：</p>
-                        <p class="text-lg font-semibold text-amber-950" id="blank-hint-text">春江潮水連海平，海上明月共潮生。</p>
+                    <!-- Context Box -->
+                    <div class="p-4 bg-amber-900/5 rounded-xl border border-amber-900/10 text-center transition-all-300">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-xs text-amber-800/60 font-medium" id="blank-context-label">上一句：</span>
+                            <button id="toggle-prev-btn" onclick="togglePrevLineVisibility()" class="text-xs text-amber-800 hover:text-amber-950 underline font-medium cursor-pointer">隱藏上一句</button>
+                        </div>
+                        <p class="text-lg font-bold text-amber-950 tracking-wider transition-all" id="blank-hint-text">春江潮水連海平，海上明月共潮生。</p>
                     </div>
 
+                    <!-- Input Area -->
                     <div>
-                        <label class="block text-sm font-medium text-amber-900 mb-1">請默寫當前句：</label>
-                        <textarea id="user-input-blank" rows="2" class="w-full p-4 rounded-lg border border-amber-900/30 bg-white/80 focus:ring-2 focus:ring-amber-900 focus:outline-none font-serif text-lg tracking-wider transition" placeholder="在此輸入繁體詩句，按 Enter 直接下一句..."></textarea>
+                        <label class="block text-xs font-semibold text-amber-900 mb-1.5">請默寫當前句：</label>
+                        <textarea id="user-input-blank" rows="2" class="w-full p-3.5 rounded-xl border border-amber-900/30 bg-white/90 focus:ring-2 focus:ring-amber-800 focus:outline-none font-serif text-lg tracking-wider transition shadow-inner placeholder:text-stone-400 placeholder:text-sm" placeholder="在此輸入答案（繁體/簡體/拼音均可），按 Enter 下一句..."></textarea>
                     </div>
 
+                    <!-- Action Controls -->
                     <div class="flex justify-between items-center pt-2">
-                        <button onclick="prevBlankLine()" class="px-4 py-2 bg-stone-200 hover:bg-stone-300 rounded text-stone-700 text-sm font-medium transition active:scale-95">上一句</button>
-                        <button id="next-btn" onclick="nextBlankLine()" class="px-6 py-2 bg-amber-900 text-paper rounded hover:bg-amber-800 font-medium transition shadow active:scale-95">下一句 ➔</button>
+                        <button onclick="prevBlankLine()" class="px-4 py-2 bg-stone-200 hover:bg-stone-300 rounded-lg text-stone-700 text-sm font-semibold transition active:scale-95">← 上一句</button>
+                        <button id="next-btn" onclick="nextBlankLine()" class="px-6 py-2 bg-amber-900 text-paper rounded-lg hover:bg-amber-800 font-semibold text-sm transition shadow active:scale-95">下一句 ➔</button>
                     </div>
                 </div>
             </div>
@@ -129,60 +140,66 @@
 
     </main>
 
-    <footer class="mt-auto py-6 text-center text-xs text-amber-900/60 border-t border-amber-900/10">
-        <p>Chon 2026.9.23</p>
+    <footer class="mt-auto py-4 text-center text-xs text-amber-900/50">
+        <p>Chon 2026.9.23 · 古典詩詞檢測系統</p>
     </footer>
 
     <script>
         const poemData = [
-            { line: "春江潮水連海平", pinyin: "chūn jiāng cháo shuǐ lián hǎi píng", section: "第一段：月出驚波" },
-            { line: "海上明月共潮生", pinyin: "hǎi shàng míng yuè gòng cháo shēng", section: "第一段：月出驚波" },
-            { line: "灩灩隨波千萬里", pinyin: "yàn yàn suí bō qiān wàn lǐ", section: "第一段：月出驚波" },
-            { line: "何處春江無月明", pinyin: "hé chù chūn jiāng wú yuè míng", section: "第一段：月出驚波" },
-            { line: "江流宛轉繞芳甸", pinyin: "jiāng liú wǎn zhuǎn rào fāng diàn", section: "第一段：月出驚波" },
-            { line: "月照花林皆似霰", pinyin: "yuè zhào huā lín jiē sì xiàn", section: "第一段：月出驚波" },
-            { line: "空裏流霜不覺飛", pinyin: "kōng lǐ liú shuāng bù jué fēi", section: "第一段：月出驚波" },
-            { line: "汀上白沙看不見", pinyin: "tīng shàng bái shā kàn bù jiàn", section: "第一段：月出驚波" },
-            { line: "江天一色無纖塵", pinyin: "jiāng tiān yī sè wú xiān chén", section: "第二段：月照江天" },
-            { line: "皎皎空中孤月輪", pinyin: "jiǎo jiǎo kōng zhōng gū yuè lún", section: "第二段：月照江天" },
-            { line: "江畔何人初見月", pinyin: "jiāng pàn hé rén chū jiàn yuè", section: "第二段：月照江天" },
-            { line: "江月何年初照人", pinyin: "jiāng yuè hé nián chū zhào rén", section: "第二段：月照江天" },
-            { line: "人生代代無窮已", pinyin: "rén shēng dài dài wú qióng yǐ", section: "第二段：月照江天" },
-            { line: "江月年年望相似", pinyin: "jiāng yuè nián nián wàng xiāng sì", section: "第二段：月照江天" },
-            { line: "不知江月待何人", pinyin: "bù zhī jiāng yuè dài hé rén", section: "第二段：月照江天" },
-            { line: "但見長江送流水", pinyin: "dàn jiàn cháng jiāng sòng liú shuǐ", section: "第二段：月照江天" },
-            { line: "白雲一片去悠悠", pinyin: "bái yún yī piàn qù yōu yōu", section: "第三段：思婦懷遠" },
-            { line: "青楓浦上不勝愁", pinyin: "qīng fēng pǔ shàng bù shèng chóu", section: "第三段：思婦懷遠" },
-            { line: "誰家今夜扁舟子", pinyin: "shuí jiā jīn yè piān zhōu zǐ", section: "第三段：思婦懷遠" },
-            { line: "何處相思明月樓", pinyin: "hé chù xiāng sī míng yuè lóu", section: "第三段：思婦懷遠" },
-            { line: "可憐樓上月徘徊", pinyin: "kě lián lóu shàng yuè pái huái", section: "第三段：思婦懷遠" },
-            { line: "應照離人妝鏡臺", pinyin: "yīng zhào lí rén zhuāng jìng tái", section: "第三段：思婦懷遠" },
-            { line: "玉戶簾中卷不去", pinyin: "yù hù lián zhōng juǎn bù qù", section: "第三段：思婦懷遠" },
-            { line: "搗衣砧上拂還來", pinyin: "dǎo yī zhēn shàng fú hái lái", section: "第三段：思婦懷遠" },
-            { line: "此時相望不相聞", pinyin: "cǐ shí xiāng wàng bù xiāng wén", section: "第四段：月夜感傷" },
-            { line: "願逐月華流照君", pinyin: "yuàn zhú yuè huá liú zhào jūn", section: "第四段：月夜感傷" },
-            { line: "鴻雁長飛光不度", pinyin: "hóng yàn cháng fēi guāng bù dù", section: "第四段：月夜感傷" },
-            { line: "魚龍潛躍水成文", pinyin: "yú lóng qián yuè shuǐ chéng wén", section: "第四段：月夜感傷" },
-            { line: "昨夜閒潭夢落花", pinyin: "zuó yè xián tán mèng luò huā", section: "第五段：遊子思歸" },
-            { line: "可憐春半不還家", pinyin: "kě lián chūn bàn bù huán jiā", section: "第五段：遊子思歸" },
-            { line: "江水流春去欲盡", pinyin: "jiāng shuǐ liú chūn qù yù jìn", section: "第五段：遊子思歸" },
-            { line: "江潭落月複西斜", pinyin: "jiāng tán luò yuè fù xī xié", section: "第五段：遊子思歸" },
-            { line: "斜月沉沉藏海霧", pinyin: "xié yuè chén chén cáng hǎi wù", section: "第五段：遊子思歸" },
-            { line: "碣石瀟湘無限路", pinyin: "jié shí xiāo xiāng wú xiàn lù", section: "第五段：遊子思歸" },
-            { line: "不知乘月幾人歸", pinyin: "bù zhī chéng yuè jǐ rén guī", section: "第五段：遊子思歸" },
-            { line: "落月搖情滿江樹", pinyin: "luò yuè yáo qíng mǎn jiāng shù", section: "第五段：遊子思歸" }
+            { line: "春江潮水連海平", pinyin: "chun jiang chao shui lian hai ping", section: "第一段：月出驚波" },
+            { line: "海上明月共潮生", pinyin: "hai shang ming yue gong chao sheng", section: "第一段：月出驚波" },
+            { line: "灩灩隨波千萬里", pinyin: "yan yan sui bo qian wan li", section: "第一段：月出驚波" },
+            { line: "何處春江無月明", pinyin: "he chu chun jiang wu yue ming", section: "第一段：月出驚波" },
+            { line: "江流宛轉繞芳甸", pinyin: "jiang liu wan zhuan rao fang dian", section: "第一段：月出驚波" },
+            { line: "月照花林皆似霰", pinyin: "yue zhao hua lin jie si xian", section: "第一段：月出驚波" },
+            { line: "空裏流霜不覺飛", pinyin: "kong li liu shuang bu jue fei", section: "第一段：月出驚波" },
+            { line: "汀上白沙看不見", pinyin: "ting shang bai sha kan bu jian", section: "第一段：月出驚波" },
+            { line: "江天一色無纖塵", pinyin: "jiang tian yi se wu xian chen", section: "第二段：月照江天" },
+            { line: "皎皎空中孤月輪", pinyin: "jiao jiao kong zhong gu yue lun", section: "第二段：月照江天" },
+            { line: "江畔何人初見月", pinyin: "jiang pan he ren chu jian yue", section: "第二段：月照江天" },
+            { line: "江月何年初照人", pinyin: "jiang yue he nian chu zhao ren", section: "第二段：月照江天" },
+            { line: "人生代代無窮已", pinyin: "ren sheng dai dai wu qiong yi", section: "第二段：月照江天" },
+            { line: "江月年年望相似", pinyin: "jiang yue nian nian wang xiang si", section: "第二段：月照江天" },
+            { line: "不知江月待何人", pinyin: "bu zhi jiang yue dai he ren", section: "第二段：月照江天" },
+            { line: "但見長江送流水", pinyin: "dan jian chang jiang song liu shui", section: "第二段：月照江天" },
+            { line: "白雲一片去悠悠", pinyin: "bai yun yi pian qu you you", section: "第三段：思婦懷遠" },
+            { line: "青楓浦上不勝愁", pinyin: "qing feng pu shang bu sheng chou", section: "第三段：思婦懷遠" },
+            { line: "誰家今夜扁舟子", pinyin: "shui jia jin ye pian zhou zi", section: "第三段：思婦懷遠" },
+            { line: "何處相思明月樓", pinyin: "he chu xiang si ming yue lou", section: "第三段：思婦懷遠" },
+            { line: "可憐樓上月徘徊", pinyin: "ke lian lou shang yue pai huai", section: "第三段：思婦懷遠" },
+            { line: "應照離人妝鏡臺", pinyin: "ying zhao li ren zhuang jing tai", section: "第三段：思婦懷遠" },
+            { line: "玉戶簾中卷不去", pinyin: "yu hu lian zhong juan bu qu", section: "第三段：思婦懷遠" },
+            { line: "搗衣砧上拂還來", pinyin: "dao yi zhen shang fu hai lai", section: "第三段：思婦懷遠" },
+            { line: "此時相望不相聞", pinyin: "ci shi xiang wang bu xiang wen", section: "第四段：月夜感傷" },
+            { line: "願逐月華流照君", pinyin: "yuan zhu yue hua liu zhao jun", section: "第四段：月夜感傷" },
+            { line: "鴻雁長飛光不度", pinyin: "hong yan chang fei guang bu du", section: "第四段：月夜感傷" },
+            { line: "魚龍潛躍水成文", pinyin: "yu long qian yue shui cheng wen", section: "第四段：月夜感傷" },
+            { line: "昨夜閒潭夢落花", pinyin: "zuo ye xian tan meng luo hua", section: "第五段：遊子思歸" },
+            { line: "可憐春半不還家", pinyin: "ke lian chun ban bu huan jia", section: "第五段：遊子思歸" },
+            { line: "江水流春去欲盡", pinyin: "jiang shui liu chun qu yu jin", section: "第五段：遊子思歸" },
+            { line: "江潭落月複西斜", pinyin: "jiang tan luo yue fu xi xie", section: "第五段：遊子思歸" },
+            { line: "斜月沉沉藏海霧", pinyin: "xie yue chen chen cang hai wu", section: "第五段：遊子思歸" },
+            { line: "碣石瀟湘無限路", pinyin: "jie shi xiao xiang wu xian lu", section: "第五段：遊子思歸" },
+            { line: "不知乘月幾人歸", pinyin: "bu zhi cheng yue ji ren gui", section: "第五段：遊子思歸" },
+            { line: "落月搖情滿江樹", pinyin: "luo yue yao qing man jiang shu", section: "第五段：遊子思歸" }
         ];
 
-        // Store user inputs for all 36 lines
         let userAnswers = new Array(poemData.length).fill("");
+        let showPrevLine = true;
+        let converter = null;
+
+        // Initialize OpenCC for Simplified to Traditional conversion
+        if (window.OpenCC) {
+            converter = OpenCC.Converter({ from: 'cn', to: 'hk' });
+        }
 
         function switchTab(tabId) {
             ['read', 'blank'].forEach(id => {
                 document.getElementById(`tab-${id}`).classList.add('hidden');
-                document.getElementById(`btn-${id}`).className = "px-4 py-1.5 rounded text-sm font-medium transition-all text-amber-900 hover:bg-amber-900/20";
+                document.getElementById(`btn-${id}`).className = "px-4 py-1.5 rounded-md text-sm font-semibold transition-all-300 text-amber-900 hover:bg-amber-900/10";
             });
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
-            document.getElementById(`btn-${tabId}`).className = "px-4 py-1.5 rounded text-sm font-medium transition-all bg-amber-900 text-paper shadow";
+            document.getElementById(`btn-${tabId}`).className = "px-4 py-1.5 rounded-md text-sm font-semibold transition-all-300 bg-amber-900 text-paper shadow";
             
             if (tabId === 'blank') {
                 setTimeout(() => document.getElementById('user-input-blank').focus(), 100);
@@ -197,12 +214,12 @@
             poemData.forEach((item, index) => {
                 if (item.section !== currentSection) {
                     currentSection = item.section;
-                    html += `<div class="text-xs font-semibold tracking-widest text-amber-800/60 uppercase mt-6 mb-3 border-b border-amber-900/10 pb-1">${currentSection}</div>`;
+                    html += `<div class="text-xs font-bold tracking-widest text-amber-900/60 uppercase mt-6 mb-2 border-b border-amber-900/10 pb-1">${currentSection}</div>`;
                 }
                 html += `
-                    <div class="py-1 transition hover:bg-amber-900/5 rounded px-2 group cursor-pointer" onclick="openInspector(${index})" title="點擊查看釋義">
+                    <div class="py-1 transition hover:bg-amber-900/5 rounded-lg px-2 cursor-pointer" onclick="openInspector(${index})">
                         <div class="pinyin-line text-xs text-amber-800/60 font-sans tracking-wide hidden mb-0.5">${item.pinyin}</div>
-                        <div class="text-xl tracking-widest font-bold text-amber-950">${item.line}</div>
+                        <div class="text-lg sm:text-xl tracking-widest font-bold text-amber-950">${item.line}</div>
                     </div>
                 `;
             });
@@ -220,9 +237,7 @@
         let currentBlankIndex = 0;
 
         function initBlankMode() {
-            document.getElementById('blank-total').innerText = poemData.length;
             updateBlankView();
-
             const inputField = document.getElementById('user-input-blank');
             inputField.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
@@ -230,6 +245,20 @@
                     nextBlankLine();
                 }
             });
+        }
+
+        function togglePrevLineVisibility() {
+            showPrevLine = !showPrevLine;
+            const btn = document.getElementById('toggle-prev-btn');
+            const hintText = document.getElementById('blank-hint-text');
+
+            if (showPrevLine) {
+                btn.innerText = "隱藏上一句";
+                hintText.classList.remove('blur-sm', 'select-none');
+            } else {
+                btn.innerText = "顯示上一句";
+                hintText.classList.add('blur-sm', 'select-none');
+            }
         }
 
         function saveCurrentAnswer() {
@@ -240,9 +269,13 @@
         function updateBlankView() {
             document.getElementById('blank-progress').innerText = currentBlankIndex + 1;
             
+            // Progress Bar
+            const percent = ((currentBlankIndex + 1) / poemData.length) * 100;
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+
             if (currentBlankIndex === 0) {
                 document.getElementById('blank-context-label').innerText = "詩首提示：";
-                document.getElementById('blank-hint-text').innerText = "全詩開頭（可點擊右上角按鈕獲取首字提示）";
+                document.getElementById('blank-hint-text').innerText = "《春江花月夜》全詩開頭";
             } else {
                 document.getElementById('blank-context-label').innerText = "上一句：";
                 document.getElementById('blank-hint-text').innerText = poemData[currentBlankIndex - 1].line;
@@ -254,23 +287,22 @@
 
             const nextBtn = document.getElementById('next-btn');
             if (currentBlankIndex === poemData.length - 1) {
-                nextBtn.innerText = "完成並提交核對 ✨";
-                nextBtn.className = "px-6 py-2 bg-emerald-800 text-paper rounded hover:bg-emerald-700 font-medium transition shadow active:scale-95";
+                nextBtn.innerText = "提交並查看成績 ✨";
+                nextBtn.className = "px-6 py-2 bg-emerald-800 text-paper rounded-lg hover:bg-emerald-700 font-semibold text-sm transition shadow active:scale-95";
             } else {
                 nextBtn.innerText = "下一句 ➔";
-                nextBtn.className = "px-6 py-2 bg-amber-900 text-paper rounded hover:bg-amber-800 font-medium transition shadow active:scale-95";
+                nextBtn.className = "px-6 py-2 bg-amber-900 text-paper rounded-lg hover:bg-amber-800 font-semibold text-sm transition shadow active:scale-95";
             }
         }
 
         function toggleHint() {
             const currentItem = poemData[currentBlankIndex];
             const firstChar = currentItem.line.charAt(0);
-            alertBox(`本句首字提示為：【 ${firstChar} 】\n全句共有 ${currentItem.line.length} 個字。`);
+            alertBox(`💡 首字提示：【 ${firstChar} 】\n全句字數：${currentItem.line.length} 個字`);
         }
 
         function nextBlankLine() {
             saveCurrentAnswer();
-
             if (currentBlankIndex < poemData.length - 1) {
                 currentBlankIndex++;
                 updateBlankView();
@@ -281,23 +313,42 @@
 
         function prevBlankLine() {
             saveCurrentAnswer();
-
             if (currentBlankIndex > 0) {
                 currentBlankIndex--;
                 updateBlankView();
             }
         }
 
+        function cleanText(text) {
+            return text.replace(/[，。？！、\s]/g, '').toLowerCase();
+        }
+
         function showCompletionSummary() {
             let correctCount = 0;
+            let simplifiedCount = 0;
+            let pinyinCount = 0;
 
             poemData.forEach((item, i) => {
-                const userText = userAnswers[i] || "";
-                const cleanUser = userText.replace(/[，。？！、\s]/g, '');
-                const cleanCorrect = item.line.replace(/[，。？！、\s]/g, '');
+                let userRaw = userAnswers[i] || "";
+                let userClean = cleanText(userRaw);
+                let correctClean = cleanText(item.line);
+                let pinyinClean = cleanText(item.pinyin);
 
-                if (cleanUser === cleanCorrect) {
+                if (!userClean) return;
+
+                // 1. Direct match (Traditional)
+                if (userClean === correctClean) {
                     correctCount++;
+                } 
+                // 2. Simplified Chinese check
+                else if (converter && cleanText(converter(userRaw)) === correctClean) {
+                    correctCount++;
+                    simplifiedCount++;
+                } 
+                // 3. Pinyin match check
+                else if (userClean === pinyinClean) {
+                    correctCount++;
+                    pinyinCount++;
                 }
             });
 
@@ -306,12 +357,22 @@
 
             let title = "默寫完成！";
             if (accuracy === 100) title = "🏆 完美全對！功力深厚！";
-            else if (accuracy >= 80) title = "👏 表現相當優異！";
-            else if (accuracy >= 50) title = "📖 熟練度尚可，再接再厲！";
-            else title = "✍️ 建議多對照原文複習喔！";
+            else if (accuracy >= 80) title = "👏 表現優異！基本熟練！";
+            else if (accuracy >= 50) title = "📖 熟練度尚可，繼續加油！";
+            else title = "✍️ 建議多對照原文複習！";
 
-            const msg = `${title}\n\n📊 全詩默寫成績單：\n• 正確率：${accuracy}%\n• 正確句數：${correctCount} / ${total}\n• 錯漏句數：${total - correctCount} 句`;
-            
+            let msg = `${title}\n\n📊 全詩默寫成績單：\n• 正確率：${accuracy}%\n• 答對句數：${correctCount} / ${total}\n• 錯漏句數：${total - correctCount} 句`;
+
+            if (simplifiedCount > 0 || pinyinCount > 0) {
+                msg += `\n\n⚠️ 答題細節提示：`;
+                if (simplifiedCount > 0) {
+                    msg += `\n• 共有 ${simplifiedCount} 句使用了簡體字，建議平時多練習繁體標準字形喔！`;
+                }
+                if (pinyinCount > 0) {
+                    msg += `\n• 共有 ${pinyinCount} 句使用了拼音替代，建議多嘗試寫出漢字。`;
+                }
+            }
+
             alertBox(msg);
         }
 
@@ -322,9 +383,9 @@
                 modal.id = 'custom-alert';
                 modal.className = 'fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center z-50 p-4';
                 modal.innerHTML = `
-                    <div class="bg-[#FAF6EF] border-2 border-amber-900 p-6 rounded-xl max-w-sm w-full text-center shadow-xl transform transition-all">
-                        <p id="custom-alert-msg" class="text-amber-950 mb-6 font-serif text-lg leading-relaxed whitespace-pre-line"></p>
-                        <button onclick="document.getElementById('custom-alert').classList.add('hidden')" class="px-6 py-2 bg-amber-900 text-paper rounded font-medium shadow hover:bg-amber-800 transition active:scale-95">確定</button>
+                    <div class="bg-[#FAF6EF] border-2 border-amber-900 p-6 rounded-2xl max-w-sm w-full text-center shadow-2xl transform transition-all">
+                        <p id="custom-alert-msg" class="text-amber-950 mb-6 font-serif text-base sm:text-lg leading-relaxed whitespace-pre-line text-left"></p>
+                        <button onclick="document.getElementById('custom-alert').classList.add('hidden')" class="px-6 py-2 bg-amber-900 text-paper rounded-lg font-semibold shadow hover:bg-amber-800 transition active:scale-95 w-full">確定</button>
                     </div>
                 `;
                 document.body.appendChild(modal);
@@ -335,7 +396,7 @@
 
         function openInspector(index) {
             const item = poemData[index];
-            alertBox(`【第 ${index + 1} 句】\n詩句：${item.line}\n拼音：${item.pinyin}\n歸屬：${item.section}`);
+            alertBox(`【第 ${index + 1} 句】\n詩句：${item.line}\n拼音：${item.pinyin}\n段落：${item.section}`);
         }
 
         window.onload = function() {
