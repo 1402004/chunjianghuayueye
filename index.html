@@ -46,6 +46,13 @@
         .transition-all-300 {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        .starred {
+            position: relative;
+        }
+        .starred::after {
+            content: ' ⭐';
+            color: #B8860B;
+        }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #F4ECE1; }
         ::-webkit-scrollbar-thumb { background: #C5A059; border-radius: 3px; }
@@ -182,6 +189,7 @@
         ];
 
         let userAnswers = new Array(poemData.length).fill("");
+        let starredLines = new Array(poemData.length).fill(false); // 記錄星星狀態
         let showPrevLine = false;
         let converter = null;
 
@@ -212,14 +220,28 @@
                     currentSection = item.section;
                     html += `<div class="text-xs font-bold tracking-widest text-amber-900/60 uppercase mt-6 mb-2 border-b border-amber-900/10 pb-1">${currentSection}</div>`;
                 }
+                
+                const isStarredClass = starredLines[index] ? 'starred bg-amber-900/10' : '';
+
                 html += `
-                    <div class="py-1 transition hover:bg-amber-900/5 rounded-lg px-2 cursor-pointer" onclick="openInspector(${index})">
+                    <div class="py-1 transition hover:bg-amber-900/5 rounded-lg px-2 cursor-pointer ${isStarredClass}" 
+                         onclick="openInspector(${index})"
+                         oncontextmenu="toggleStar(event, ${index})">
                         <div class="pinyin-line text-xs text-amber-800/70 font-sans tracking-wide hidden mb-0.5 font-medium">${item.pinyin}</div>
                         <div class="text-lg sm:text-xl tracking-widest font-bold text-amber-950">${item.line}</div>
                     </div>
                 `;
             });
             container.innerHTML = html;
+        }
+
+        function toggleStar(event, index) {
+            event.preventDefault(); // 阻止右鍵預設選單
+            starredLines[index] = !starredLines[index];
+            renderPoemView();
+            if (document.getElementById('toggle-pinyin').checked) {
+                togglePinyinDisplay();
+            }
         }
 
         function togglePinyinDisplay() {
